@@ -7,6 +7,7 @@ Creates optimal routes from Nanterre to multiple addresses, considering traffic 
 import os
 import json
 import pickle
+import base64
 from datetime import datetime, timedelta
 from typing import List, Dict, Tuple
 import googlemaps
@@ -114,7 +115,6 @@ class PlanningRoadmapCreator:
                     data = payload.get('body', {}).get('data', '')
                 
                 if data:
-                    import base64
                     text = base64.urlsafe_b64decode(data).decode('utf-8')
                     
                     # Simple address extraction (can be improved with regex)
