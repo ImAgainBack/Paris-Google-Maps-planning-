@@ -28,7 +28,10 @@ class PlanningRoadmapCreator:
     def __init__(self, config_file='config.json'):
         """Initialize the planning roadmap creator with configuration."""
         self.config = self.load_config(config_file)
-        self.gmaps = googlemaps.Client(key=self.config['google_maps_api_key'])
+        api_key = self.config.get('google_maps_api_key', '')
+        if not api_key:
+            raise ValueError("Google Maps API key is required. Please set it in config.json or GOOGLE_MAPS_API_KEY environment variable.")
+        self.gmaps = googlemaps.Client(key=api_key)
         self.gmail_service = None
         self.calendar_service = None
         self.starting_location = self.config.get('starting_location', 'Nanterre, France')
@@ -115,7 +118,11 @@ class PlanningRoadmapCreator:
                     data = payload.get('body', {}).get('data', '')
                 
                 if data:
-                    text = base64.urlsafe_b64decode(data).decode('utf-8')
+                    try:
+                        text = base64.urlsafe_b64decode(data).decode('utf-8')
+                    except (ValueError, UnicodeDecodeError) as e:
+                        print(f"Warning: Could not decode email content: {e}")
+                        continue
                     
                     # Simple address extraction (can be improved with regex)
                     # Look for lines that might contain addresses
