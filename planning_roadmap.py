@@ -108,7 +108,6 @@ class PlanningRoadmapCreator:
                 
                 # Extract address from email body
                 payload = msg.get('payload', {})
-                headers = payload.get('headers', [])
                 
                 # Get email body
                 if 'parts' in payload:
@@ -233,6 +232,9 @@ class PlanningRoadmapCreator:
         Returns the order of indices to visit.
         """
         n = len(durations)
+        if n <= 1:
+            return list(range(n))
+        
         unvisited = set(range(1, n))  # Start from 0 (starting location)
         route = [0]
         current = 0
