@@ -1,0 +1,8 @@
+{
+  "starting_location": "Nanterre, France",
+  "google_maps_api_key": "YOUR_GOOGLE_MAPS_API_KEY",
+  "gmail_credentials_file": "credentials.json",
+  "rest_time_minutes": 30,
+  "work_day_start_hour": 8,
+  "work_day_end_hour": 18
+}
