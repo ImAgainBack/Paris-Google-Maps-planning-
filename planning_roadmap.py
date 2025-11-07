@@ -8,6 +8,7 @@ import os
 import json
 import pickle
 import base64
+import traceback
 from datetime import datetime, timedelta
 from typing import List, Dict, Tuple
 import googlemaps
@@ -389,7 +390,6 @@ def main():
         print("4. Save credentials as 'credentials.json'")
     except Exception as e:
         print(f"\n❌ An error occurred: {e}")
-        import traceback
         traceback.print_exc()
 
 
