@@ -10,10 +10,13 @@ import json
 import os
 import sys
 
-# Add parent directory to path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-from planning_roadmap import PlanningRoadmapCreator
+# Import the module - will work if run from project directory
+try:
+    from planning_roadmap import PlanningRoadmapCreator
+except ImportError:
+    # Fallback for running tests from different locations
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from planning_roadmap import PlanningRoadmapCreator
 
 
 class TestPlanningRoadmapCreator(unittest.TestCase):
@@ -46,6 +49,17 @@ class TestPlanningRoadmapCreator(unittest.TestCase):
         self.assertIn('starting_location', config)
         self.assertEqual(config['starting_location'], 'Nanterre, France')
         self.assertEqual(config['rest_time_minutes'], 30)
+    
+    def test_initialization_missing_api_key(self):
+        """Test initialization fails when API key is missing."""
+        config_without_key = {
+            'starting_location': 'Nanterre, France',
+            'rest_time_minutes': 30
+        }
+        with patch.object(PlanningRoadmapCreator, 'load_config', return_value=config_without_key):
+            with self.assertRaises(ValueError) as context:
+                creator = PlanningRoadmapCreator()
+            self.assertIn('API key', str(context.exception))
     
     @patch('planning_roadmap.googlemaps.Client')
     def test_nearest_neighbor_tsp(self, mock_gmaps):
